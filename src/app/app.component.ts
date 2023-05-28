@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {TGridComponent} from "./components/t-grid/t-grid.component";
 import {TColumnComponent} from "./components/t-grid/components/t-column/t-column.component";
+import {ProductService} from "./services/product/product.service";
 
 @Component({
   selector: 'app-root',
@@ -14,14 +15,18 @@ import {TColumnComponent} from "./components/t-grid/components/t-column/t-column
 })
 export class AppComponent implements OnInit {
   title = 'robert-app';
-  data = []
+  data = [];
+  totalData: number = 0;
+  limit: number = 0;
+  skip: number = 0;
+
+  constructor(private productService: ProductService) {
+  }
 
   ngOnInit() {
-    fetch('https://dummyjson.com/products')
-      .then(res => res.json())
-      .then(json => {
-        this.data = json.products
-      })
+    this.productService.getProducts().subscribe((data: any) => {
+      this.data = data.products
+    })
   }
 
   paginationChange(data: any) {
