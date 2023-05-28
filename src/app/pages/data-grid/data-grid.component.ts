@@ -28,7 +28,11 @@ export class DataGridComponent implements OnInit {
     })
   }
 
-  paginationChange(data: any) {
+  paginationChange(data: any): void {
     console.log(data);
+  }
+
+  sortChange(data: any): void {
+    console.log(data)
   }
 }

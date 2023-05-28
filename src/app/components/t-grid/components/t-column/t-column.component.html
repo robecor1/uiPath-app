@@ -1,4 +1,10 @@
 <div class="t-grid_column">
-  <div class="t-grid_header" >{{name}}</div>
+  <div class="t-grid_header"
+    [ngClass]="{'clickable': isSortable()}"
+    (click)="isSortable() && clickSort()"
+  >{{name}}
+  <span *ngIf="sorted === 'asc'" [innerHTML]="upCaret"></span>
+  <span *ngIf="sorted === 'desc'" [innerHTML]="downCaret"></span>
+  </div>
   <div class="t-grid_item" *ngFor="let item of data">{{item}}</div>
 </div>

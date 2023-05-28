@@ -13,6 +13,10 @@
   font-weight: 500;
   background-color: #92A8D1;
   padding: 10px;
+
+  &.clickable {
+    cursor: pointer;
+  }
 }
 
 .t-grid_item {

@@ -2,7 +2,7 @@ import {Component, ContentChildren, Input, QueryList, SimpleChange, Output, Even
 import {CommonModule} from '@angular/common'
 import {Observable} from "rxjs";
 import {TColumnComponent} from "./components/t-column/t-column.component";
-import {DataPerKey, TGridDataItem} from "./@types";
+import {DataPerKey, Direction, TGridDataItem} from "./@types";
 
 @Component({
   selector: 't-grid',
@@ -20,6 +20,7 @@ export class TGridComponent {
   @Input() sortable: boolean = true;
   @Input() pageSize: number | null = null;
 
+  @Output() sortChange = new EventEmitter<{columnName: string, direction: Direction | null}>()
   @Output() paginationChange = new EventEmitter<{currentPage: number, pageSize: number | null}>()
 
   @ContentChildren(TColumnComponent) children: QueryList<TColumnComponent<TGridDataItem>>
@@ -31,7 +32,7 @@ export class TGridComponent {
     this.addDataToColumns()
   }
 
-  ngOnChanges(changes: SimpleChange) {
+  ngOnChanges() {
     this.addDataToColumns()
   }
 
@@ -86,6 +87,11 @@ export class TGridComponent {
       }
 
       child.globalSortable = this.sortable
+      child.sortedChange = this.sortedChangeHandle.bind(this)
     }
+  }
+
+  sortedChangeHandle({columnName, direction}: {columnName: string, direction: Direction | null}): void {
+    this.sortChange.emit({columnName, direction: direction})
   }
 }

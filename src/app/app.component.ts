@@ -1,5 +1,4 @@
-import {Component, OnInit} from '@angular/core';
-import {ProductService} from "./services/product/product.service";
+import {Component} from '@angular/core';
 import {RouterOutlet} from "@angular/router";
 
 @Component({
