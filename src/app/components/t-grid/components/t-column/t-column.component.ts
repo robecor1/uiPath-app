@@ -15,5 +15,7 @@ export class TColumnComponent<T> {
   @Input() name: string;
   @Input() property: keyof T;
   @Input() sortable: boolean;
+
   data: T[];
+  globalSortable: boolean = false;
 }

@@ -1,8 +1,10 @@
 <div>
   <h1>{{ title }}</h1>
-  <t-grid [data]="data">
+  <t-grid [data]="data"
+    [pageSize]="10"
+    (paginationChange)="this.paginationChange($event)"
+  >
     <t-column [name]="'Name'" [property]="'title'"></t-column>
-    <t-column [name]="'Description'" [property]="'description'"></t-column>
     <t-column [name]="'Price'" [property]="'price'"></t-column>
     <t-column [name]="'Rating'" [property]="'rating'"></t-column>
     <t-column [name]="'Stock'" [property]="'stock'"></t-column>

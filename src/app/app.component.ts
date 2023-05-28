@@ -24,24 +24,7 @@ export class AppComponent implements OnInit {
       })
   }
 
-  getData() {
-    return [
-      {
-        name: "Name 1",
-        price: 10
-      },
-      {
-        name: "Name 2",
-        price: 10
-      },
-      {
-        name: "Name 3",
-        price: 10
-      },
-      {
-        name: "Name 3",
-        price: 10
-      },
-    ]
+  paginationChange(data: any) {
+    console.log(data);
   }
 }

@@ -1,4 +1,4 @@
-import {Component, ContentChildren, Input, QueryList, SimpleChange} from '@angular/core'
+import {Component, ContentChildren, Input, QueryList, SimpleChange, Output, EventEmitter} from '@angular/core'
 import {CommonModule} from '@angular/common'
 import {Observable} from "rxjs";
 import {TColumnComponent} from "./components/t-column/t-column.component";
@@ -20,9 +20,12 @@ export class TGridComponent {
   @Input() sortable: boolean = true;
   @Input() pageSize: number | null = null;
 
+  @Output() paginationChange = new EventEmitter<{currentPage: number, pageSize: number | null}>()
+
   @ContentChildren(TColumnComponent) children: QueryList<TColumnComponent<TGridDataItem>>
 
   dataPerKey: DataPerKey<TGridDataItem> = {};
+  currentPage: number = 1
 
   ngAfterContentInit() {
     this.addDataToColumns()
@@ -40,6 +43,14 @@ export class TGridComponent {
         [child.property]: []
       })
     }
+  }
+
+  onNextPres() {
+    this.paginationChange.emit({currentPage: ++this.currentPage, pageSize: this.pageSize})
+  }
+
+  onPrevPres() {
+    this.paginationChange.emit({currentPage: --this.currentPage, pageSize: this.pageSize})
   }
 
   addDataToColumns(): void {
@@ -73,6 +84,8 @@ export class TGridComponent {
         // Assign the data input the value of the array at that key
         child.data = this.dataPerKey[childProperty] || []
       }
+
+      child.globalSortable = this.sortable
     }
   }
 }
