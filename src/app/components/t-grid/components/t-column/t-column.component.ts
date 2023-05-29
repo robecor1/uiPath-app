@@ -28,20 +28,22 @@ export class TColumnComponent<T> {
   sortedChange: SortedChangeFunction = null
 
   clickSort(): void {
+    let newSorted = this.sorted
+
     switch (this.sorted) {
       case null:
-        this.sorted = 'asc'
+        newSorted = 'asc'
         break
       case 'asc':
-        this.sorted = 'desc'
+        newSorted = 'des'
         break
-      case 'desc':
-        this.sorted = null
+      case 'des':
+        newSorted = null
         break
     }
 
     if (this.sortedChange) {
-      this.sortedChange({columnName: this.property as string, direction: this.sorted})
+      this.sortedChange({columnName: this.property as string, direction: newSorted})
     }
   }
 

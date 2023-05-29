@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, SimpleChange} from '@angular/core';
 import {TGridComponent} from "../../components/t-grid/t-grid.component";
 import {TColumnComponent} from "../../components/t-grid/components/t-column/t-column.component";
 import {ProductService} from "../../services/product/product.service";
 import {map} from 'rxjs'
+import {Direction} from "../../components/t-grid/@types";
 
 @Component({
   selector: 'app-data-grid',
@@ -16,10 +17,11 @@ import {map} from 'rxjs'
 export class DataGridComponent implements OnInit {
   title = 'Data Grid';
   data: any = [];
-  totalData: number = 0;
-  limit: number = 0;
   skip: number = 0;
   pageSize: number = 30;
+
+  private sortField : string;
+  private sortDirection: 'asc' | 'des' | null = null
 
   constructor(private productService: ProductService) {
   }
@@ -33,9 +35,11 @@ export class DataGridComponent implements OnInit {
     this.loadData()
   }
 
-  sortChange(data: any): void {
-    console.log(data)
+  sortChange({columnName, direction}: { columnName: string, direction: Direction }): void {
+    // Since sorting will be done directly on the grid we log the values from the event from now
+    console.log(columnName, direction)
   }
+
 
   loadData() {
     this.productService.getProducts({

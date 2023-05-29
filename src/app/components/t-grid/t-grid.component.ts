@@ -1,4 +1,4 @@
-import {Component, ContentChildren, Input, QueryList, Output, EventEmitter} from '@angular/core'
+import {Component, ContentChildren, Input, QueryList, Output, EventEmitter, SimpleChange} from '@angular/core'
 import {CommonModule} from '@angular/common'
 import {Observable, isObservable, Subscription} from "rxjs";
 import {TColumnComponent} from "./components/t-column/t-column.component";
@@ -21,21 +21,26 @@ export class TGridComponent {
   @Input() sortable: boolean = true;
   @Input() pageSize: number | null = null;
 
-  @Output() sortChange = new EventEmitter<{columnName: string, direction: Direction}>()
-  @Output() paginationChange = new EventEmitter<{currentPage: number, pageSize: number | null}>()
+  @Output() sortChange = new EventEmitter<{ columnName: string, direction: Direction }>()
+  @Output() paginationChange = new EventEmitter<{ currentPage: number, pageSize: number | null }>()
 
   @ContentChildren(TColumnComponent) children: QueryList<TColumnComponent<TGridDataItem>>
 
-  dataPerKey: DataPerKey<TGridDataItem> = {};
-  currentPage: number = 1
-  dataSubscription: Subscription
+  private dataPerKey: DataPerKey<TGridDataItem> = {};
+  private dataSubscription: Subscription
+  private sortKey: string
+  private sortDirection: Direction = null
 
   ngAfterContentInit() {
     this.addDataToColumns()
   }
 
-  ngOnChanges() {
-    this.addDataToColumns()
+  ngOnChanges({data}: {data?: SimpleChange }) {
+    if (data) {
+      if (data.previousValue !== data.currentValue) {
+        this.addDataToColumns()
+      }
+    }
   }
 
   ngOnDestroy() {
@@ -51,6 +56,7 @@ export class TGridComponent {
   initDataKey(): void {
     this.dataPerKey = {}
     // Initialize the data object based on the children and their property input
+    // We do this by iterating the children, getting the property field and adding a field with that name and an empty string as a value
     for (const child of this.children) {
       Object.assign(this.dataPerKey, {
         [child.property]: []
@@ -84,11 +90,18 @@ export class TGridComponent {
 
       child.globalSortable = this.sortable
       child.sortedChange = this.sortedChangeHandle.bind(this)
+
+      if (this.sortKey === childProperty) {
+        child.sorted = this.sortDirection
+      } else {
+        child.sorted = null
+      }
     }
   }
 
   populateDataKey(data: TGridDataItem[]) {
     const newKeyData = {...this.dataPerKey}
+    this.sortData(data)
 
     // We should iterate over the data input once and build the "dataPerKey" object
     // We do this as to not iterate it with a map for each child and pass the data
@@ -107,7 +120,32 @@ export class TGridComponent {
     this.injectDataInChildren()
   }
 
-  sortedChangeHandle({columnName, direction}: {columnName: string, direction: Direction}): void {
+  sortData(data: TGridDataItem[]) {
+    if (this.sortDirection !== null) {
+      data.sort((prev, next) => {
+        const prevValue = prev[this.sortKey] || ''
+        const nextValue = next[this.sortKey] || ''
+
+        if (typeof prevValue === 'number' && typeof nextValue === 'number') {
+          return this.sortDirection === 'asc' ? prevValue - nextValue : nextValue - prevValue
+        }
+        if (typeof prevValue === 'string' && typeof nextValue === 'string') {
+          return this.sortDirection === 'asc' ? prevValue.localeCompare(nextValue) : nextValue.localeCompare(prevValue)
+        }
+        if (prevValue instanceof Date && nextValue instanceof Date) {
+          return this.sortDirection === 'asc' ? prevValue.getTime() - nextValue.getTime() : nextValue.getTime() - prevValue.getTime()
+        }
+
+        return this.sortDirection === 'asc' ? prevValue.toString().localeCompare(nextValue.toString()) : nextValue.toString().localeCompare(prevValue.toString())
+      })
+    }
+  }
+
+  sortedChangeHandle({columnName, direction}: { columnName: string, direction: Direction }): void {
+    this.sortKey = columnName
+    this.sortDirection = direction
+    this.addDataToColumns()
+
     this.sortChange.emit({columnName, direction: direction})
   }
 }
