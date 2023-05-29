@@ -1,7 +1,8 @@
-import {Component, ContentChildren, Input, QueryList, SimpleChange, Output, EventEmitter} from '@angular/core'
+import {Component, ContentChildren, Input, QueryList, Output, EventEmitter} from '@angular/core'
 import {CommonModule} from '@angular/common'
 import {Observable} from "rxjs";
 import {TColumnComponent} from "./components/t-column/t-column.component";
+import {TPaginationComponent} from "./components/t-pagination/t-pagination.component";
 import {DataPerKey, Direction, TGridDataItem} from "./@types";
 
 @Component({
@@ -11,7 +12,8 @@ import {DataPerKey, Direction, TGridDataItem} from "./@types";
   standalone: true,
   imports: [
     CommonModule,
-    TColumnComponent
+    TColumnComponent,
+    TPaginationComponent
   ]
 })
 
@@ -20,7 +22,7 @@ export class TGridComponent {
   @Input() sortable: boolean = true;
   @Input() pageSize: number | null = null;
 
-  @Output() sortChange = new EventEmitter<{columnName: string, direction: Direction | null}>()
+  @Output() sortChange = new EventEmitter<{columnName: string, direction: Direction}>()
   @Output() paginationChange = new EventEmitter<{currentPage: number, pageSize: number | null}>()
 
   @ContentChildren(TColumnComponent) children: QueryList<TColumnComponent<TGridDataItem>>
@@ -91,7 +93,7 @@ export class TGridComponent {
     }
   }
 
-  sortedChangeHandle({columnName, direction}: {columnName: string, direction: Direction | null}): void {
+  sortedChangeHandle({columnName, direction}: {columnName: string, direction: Direction}): void {
     this.sortChange.emit({columnName, direction: direction})
   }
 }

@@ -2,11 +2,5 @@
   <div class="t-grid_container">
     <ng-content></ng-content>
   </div>
-  <div class="t-grid_pagination">
-    <button class="prev-btn" (click)="onPrevPres()">Previous</button>
-    <span class="page-info">
-      Page <span class="current-page">{{currentPage}}</span>
-    </span>
-    <button class="next-btn" (click)="onNextPres()">Next</button>
-  </div>
+  <t-pagination [pageSize]="pageSize" (paginationChange)="paginationChange.emit($event)"></t-pagination>
 </div>

@@ -20,7 +20,7 @@ export class TColumnComponent<T> {
 
   data: T[];
   globalSortable: boolean = false;
-  sorted: Direction | null = null
+  sorted: Direction = null
 
   upCaret: string = '&#9650'
   downCaret: string = '&#9660'
