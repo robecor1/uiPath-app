@@ -34,6 +34,10 @@ export class TGridComponent {
     this.addDataToColumns()
   }
 
+  ngOnChanges() {
+    this.addDataToColumns()
+  }
+
   ngOnDestroy() {
     this.dataSubscription && this.dataSubscription.unsubscribe()
   }
@@ -101,14 +105,6 @@ export class TGridComponent {
     this.dataPerKey = newKeyData
 
     this.injectDataInChildren()
-  }
-
-  onNextPres() {
-    this.paginationChange.emit({currentPage: ++this.currentPage, pageSize: this.pageSize})
-  }
-
-  onPrevPres() {
-    this.paginationChange.emit({currentPage: --this.currentPage, pageSize: this.pageSize})
   }
 
   sortedChangeHandle({columnName, direction}: {columnName: string, direction: Direction}): void {

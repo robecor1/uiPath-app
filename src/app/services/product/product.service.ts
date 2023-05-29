@@ -1,8 +1,6 @@
-import {HttpClient} from '@angular/common/http'
+import {HttpClient, HttpParams} from '@angular/common/http'
 import {Injectable} from '@angular/core'
-import { Observable, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
-
+import {FetchProductsOptions} from "./@types";
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +11,11 @@ export class ProductService {
 
   }
 
-  getProducts() {
-    return this.client.get('https://dummyjson.com/products', {
+  getProducts({skip = 0, limit = 30}: FetchProductsOptions = {}) {
+    return this.client.get(`https://dummyjson.com/products`, {
       observe: 'body',
-      responseType: 'json'
+      responseType: 'json',
+      params: new HttpParams().set('skip', skip?.toString()).set('limit', limit?.toString())
     })
   }
 }
