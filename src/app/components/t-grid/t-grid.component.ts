@@ -1,6 +1,6 @@
 import {Component, ContentChildren, Input, QueryList, Output, EventEmitter} from '@angular/core'
 import {CommonModule} from '@angular/common'
-import {Observable, isObservable} from "rxjs";
+import {Observable, isObservable, Subscription} from "rxjs";
 import {TColumnComponent} from "./components/t-column/t-column.component";
 import {TPaginationComponent} from "./components/t-pagination/t-pagination.component";
 import {DataPerKey, Direction, TGridDataItem} from "./@types";
@@ -12,7 +12,6 @@ import {DataPerKey, Direction, TGridDataItem} from "./@types";
   standalone: true,
   imports: [
     CommonModule,
-    TColumnComponent,
     TPaginationComponent
   ]
 })
@@ -29,13 +28,20 @@ export class TGridComponent {
 
   dataPerKey: DataPerKey<TGridDataItem> = {};
   currentPage: number = 1
+  dataSubscription: Subscription
 
   ngAfterContentInit() {
     this.addDataToColumns()
   }
 
-  ngOnChanges() {
-    this.addDataToColumns()
+  ngOnDestroy() {
+    this.dataSubscription && this.dataSubscription.unsubscribe()
+  }
+
+  addDataToColumns(): void {
+    if (this.children && this.data) {
+      this.initDataKey()
+    }
   }
 
   initDataKey(): void {
@@ -46,28 +52,14 @@ export class TGridComponent {
         [child.property]: []
       })
     }
-  }
 
-  onNextPres() {
-    this.paginationChange.emit({currentPage: ++this.currentPage, pageSize: this.pageSize})
-  }
-
-  onPrevPres() {
-    this.paginationChange.emit({currentPage: --this.currentPage, pageSize: this.pageSize})
-  }
-
-  addDataToColumns(): void {
-    if (this.children && this.data) {
-      this.initDataKey()
-      this.prepareToPopulateDataKey()
-      this.injectDataInChildren()
-    }
+    this.prepareToPopulateDataKey()
   }
 
   prepareToPopulateDataKey(): void {
     //Check if the data received is an observable and subscribe to it, processing the data as it comes
     if (isObservable(this.data)) {
-      this.data.subscribe((data: TGridDataItem[]) => {
+      this.dataSubscription = this.data.subscribe((data: TGridDataItem[]) => {
         this.populateDataKey(data)
       })
     } else {
@@ -92,17 +84,31 @@ export class TGridComponent {
   }
 
   populateDataKey(data: TGridDataItem[]) {
+    const newKeyData = {...this.dataPerKey}
+
     // We should iterate over the data input once and build the "dataPerKey" object
     // We do this as to not iterate it with a map for each child and pass the data
     for (const item of data as TGridDataItem[]) {
       // Iterate over the keys. These should be matched with the "property" input from the t-column template
-      for (const key of Object.keys(this.dataPerKey)) {
-        Object.assign(this.dataPerKey, {
+      for (const key of Object.keys(newKeyData)) {
+        Object.assign(newKeyData, {
           // Add the value of the field to the array for that key ar create a new one with one item
-          [key]: [...this.dataPerKey[key as keyof DataPerKey<TGridDataItem>], item[key] ?? null]
+          [key]: [...newKeyData[key as keyof DataPerKey<TGridDataItem>], item[key] ?? null]
         })
       }
     }
+
+    this.dataPerKey = newKeyData
+
+    this.injectDataInChildren()
+  }
+
+  onNextPres() {
+    this.paginationChange.emit({currentPage: ++this.currentPage, pageSize: this.pageSize})
+  }
+
+  onPrevPres() {
+    this.paginationChange.emit({currentPage: --this.currentPage, pageSize: this.pageSize})
   }
 
   sortedChangeHandle({columnName, direction}: {columnName: string, direction: Direction}): void {
