@@ -1,4 +1,13 @@
-import {Component, ContentChildren, Input, QueryList, Output, EventEmitter, SimpleChange} from '@angular/core'
+import {
+  Component,
+  ContentChildren,
+  Input,
+  QueryList,
+  Output,
+  EventEmitter,
+  SimpleChange,
+  ChangeDetectorRef, ChangeDetectionStrategy
+} from '@angular/core'
 import {CommonModule} from '@angular/common'
 import {Observable, isObservable, Subscription} from "rxjs";
 import {TColumnComponent} from "./components/t-column/t-column.component";
@@ -13,7 +22,8 @@ import {DataPerKey, Direction, TGridDataItem} from "./@types";
   imports: [
     CommonModule,
     TPaginationComponent
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class TGridComponent {
@@ -91,6 +101,7 @@ export class TGridComponent {
       if (Object.keys(this.dataPerKey).includes(childProperty)) {
         // Assign the data input the value of the array at that key
         child.data = this.dataPerKey[childProperty] || []
+        child.cdr.detectChanges()
       }
 
       child.globalSortable = this.sortable

@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core'
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input} from '@angular/core'
 import {CommonModule} from '@angular/common'
 import {Direction} from "../../@types";
 import {SortedChangeFunction} from "./@types";
@@ -10,7 +10,8 @@ import {SortedChangeFunction} from "./@types";
   standalone: true,
   imports: [
     CommonModule,
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class TColumnComponent<T> {
@@ -26,6 +27,12 @@ export class TColumnComponent<T> {
   downCaret: string = '&#9660'
 
   sortedChange: SortedChangeFunction = null
+  cdr: ChangeDetectorRef
+
+  constructor(cdr: ChangeDetectorRef) {
+    this.cdr = cdr
+  }
+
 
   clickSort(): void {
     let newSorted = this.sorted
