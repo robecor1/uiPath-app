@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {TGridComponent} from "../../components/t-grid/t-grid.component";
 import {TColumnComponent} from "../../components/t-grid/components/t-column/t-column.component";
 import {ProductService} from "../../services/product/product.service";
-import {map} from 'rxjs'
+import {debounceTime, map, Subject, Subscription} from 'rxjs'
 import {Direction} from "../../components/t-grid/@types";
 
 @Component({
@@ -21,11 +21,39 @@ export class DataGridComponent implements OnInit {
   pageSize: number = 30;
   totalData: number = 0;
 
+  private loadDebouncerSubject: Subject<void> = new Subject()
+  private dataSubscription: Subscription | null = null
+
   constructor(private productService: ProductService) {
   }
 
   ngOnInit() {
+    this.loadDebounceSubscription()
     this.loadData()
+  }
+
+  ngOnDestroy() {
+    this.loadDebouncerSubject.unsubscribe()
+  }
+
+  loadDebounceSubscription() {
+    if (this.dataSubscription !== null) {
+      this.dataSubscription.unsubscribe()
+    }
+
+    this.dataSubscription = this.loadDebouncerSubject
+      .pipe(
+        debounceTime(200)
+      )
+      .subscribe(() => {
+        this.productService.getProducts({
+          skip: this.skip,
+          limit: this.pageSize
+        }).subscribe((data: any) => {
+          this.totalData = data.total
+          this.data = data.products
+        })
+      })
   }
 
   paginationChange({currentPage, pageSize}: { currentPage: number, pageSize: number | null }): void {
@@ -40,13 +68,7 @@ export class DataGridComponent implements OnInit {
 
 
   loadData() {
-    this.productService.getProducts({
-      skip: this.skip,
-      limit: this.pageSize
-    }).subscribe((data: any) => {
-      this.totalData = data.total
-      this.data = data.products
-    })
+    this.loadDebouncerSubject.next()
   }
 
   loadDataObservable() {
