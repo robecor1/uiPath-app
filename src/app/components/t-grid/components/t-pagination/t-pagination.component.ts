@@ -11,6 +11,7 @@ import {debounceTime, Subject} from "rxjs";
 
 export class TPaginationComponent implements OnInit {
   @Input() pageSize: number | null = null;
+  @Input() lastPage: number;
 
   @Output() paginationChange = new EventEmitter<{ currentPage: number, pageSize: number | null }>()
 

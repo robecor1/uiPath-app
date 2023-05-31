@@ -2,6 +2,7 @@
   <h1>{{ title }}</h1>
   <t-grid [data]="data"
     [pageSize]="pageSize"
+    [totalData]="totalData"
     (sortChange)="this.sortChange($event)"
     (paginationChange)="this.paginationChange($event)"
   >

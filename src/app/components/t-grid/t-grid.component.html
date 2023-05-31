@@ -2,5 +2,5 @@
   <div class="t-grid_container">
     <ng-content></ng-content>
   </div>
-  <t-pagination [pageSize]="pageSize" (paginationChange)="paginationChange.emit($event)"></t-pagination>
+  <t-pagination [pageSize]="pageSize" [lastPage]="getLastPage()" (paginationChange)="paginationChange.emit($event)"></t-pagination>
 </div>

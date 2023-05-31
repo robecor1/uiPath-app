@@ -1,4 +1,4 @@
-import {Component, OnInit, SimpleChange} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TGridComponent} from "../../components/t-grid/t-grid.component";
 import {TColumnComponent} from "../../components/t-grid/components/t-column/t-column.component";
 import {ProductService} from "../../services/product/product.service";
@@ -19,9 +19,7 @@ export class DataGridComponent implements OnInit {
   data: any = [];
   skip: number = 0;
   pageSize: number = 30;
-
-  private sortField : string;
-  private sortDirection: 'asc' | 'des' | null = null
+  totalData: number = 0;
 
   constructor(private productService: ProductService) {
   }
@@ -46,6 +44,7 @@ export class DataGridComponent implements OnInit {
       skip: this.skip,
       limit: this.pageSize
     }).subscribe((data: any) => {
+      this.totalData = data.total
       this.data = data.products
     })
   }

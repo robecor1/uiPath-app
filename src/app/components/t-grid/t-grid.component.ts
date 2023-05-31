@@ -20,6 +20,8 @@ export class TGridComponent {
   @Input() data: TGridDataItem[] | Observable<TGridDataItem[]> = [];
   @Input() sortable: boolean = true;
   @Input() pageSize: number | null = null;
+  // I added this input as an extra to be able to calculate the last page and disable the next button
+  @Input() totalData: number;
 
   @Output() sortChange = new EventEmitter<{ columnName: string, direction: Direction }>()
   @Output() paginationChange = new EventEmitter<{ currentPage: number, pageSize: number | null }>()
@@ -37,6 +39,7 @@ export class TGridComponent {
 
   ngOnChanges({data}: {data?: SimpleChange }) {
     if (data) {
+      // Recreate the keyData object only if the reference to the data input is changed
       if (data.previousValue !== data.currentValue) {
         this.addDataToColumns()
       }
@@ -44,11 +47,13 @@ export class TGridComponent {
   }
 
   ngOnDestroy() {
+    // Unsubscribe from the subscription on component unmount
     this.dataSubscription && this.dataSubscription.unsubscribe()
   }
 
   addDataToColumns(): void {
-    if (this.children && this.data) {
+    // Start the data injection to the column only if there are children and data has a length, or it's an observable
+    if (this.children && (isObservable(this.data) || this.data.length)) {
       this.initDataKey()
     }
   }
@@ -142,10 +147,17 @@ export class TGridComponent {
   }
 
   sortedChangeHandle({columnName, direction}: { columnName: string, direction: Direction }): void {
+    // I've done the on the t-grid component itself, but it can also be done on the component
+    // using t-grid or from the api that fetches the data
     this.sortKey = columnName
     this.sortDirection = direction
     this.addDataToColumns()
 
     this.sortChange.emit({columnName, direction: direction})
+  }
+
+  getLastPage() {
+    const pageSize = this.pageSize || 1
+    return Math.ceil(this.totalData / pageSize)
   }
 }
