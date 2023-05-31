@@ -47,7 +47,7 @@ export class TGridComponent {
     this.addDataToColumns()
   }
 
-  ngOnChanges({data}: {data?: SimpleChange }) {
+  ngOnChanges({data}: { data?: SimpleChange }) {
     if (data) {
       // Recreate the keyData object only if the reference to the data input is changed
       if (data.previousValue !== data.currentValue) {
@@ -101,17 +101,18 @@ export class TGridComponent {
       if (Object.keys(this.dataPerKey).includes(childProperty)) {
         // Assign the data input the value of the array at that key
         child.data = this.dataPerKey[childProperty] || []
-        child.cdr.detectChanges()
       }
 
-      child.globalSortable = this.sortable
       child.sortedChange = this.sortedChangeHandle.bind(this)
+      child.globalSortable = this.sortable
 
       if (this.sortKey === childProperty) {
         child.sorted = this.sortDirection
       } else {
         child.sorted = null
       }
+
+      child.cdr.detectChanges()
     }
   }
 

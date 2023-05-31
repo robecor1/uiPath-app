@@ -45,7 +45,7 @@ export class TColumnComponent<T> {
         newSorted = 'des'
         break
       case 'des':
-        newSorted = null
+        newSorted = "asc"
         break
     }
 
@@ -55,6 +55,8 @@ export class TColumnComponent<T> {
   }
 
   isSortable() {
+    // The column is sortable if the t-grid input sortable and the column input sortable are true
+    // If you want it the other way where any of those 2 activate sort for the header change && to ||
     return this.sortable && this.globalSortable
   }
 }
