@@ -1,0 +1,14 @@
+<div>
+  <h1>{{ title }}</h1>
+  <t-grid [data]="data"
+    [pageSize]="pageSize"
+    [totalData]="totalData"
+    (sortChange)="this.sortChange($event)"
+    (paginationChange)="this.paginationChange($event)"
+  >
+    <t-column [name]="'Name'" [property]="'title'" [sortable]="true"></t-column>
+    <t-column [name]="'Price'" [property]="'price'" [sortable]="true"></t-column>
+    <t-column [name]="'Rating'" [property]="'rating'"></t-column>
+    <t-column [name]="'Stock'" [property]="'stock'" [sortable]="true"></t-column>
+  </t-grid>
+</div>

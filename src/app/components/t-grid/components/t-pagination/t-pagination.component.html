@@ -1,0 +1,7 @@
+<div class="t-grid_pagination">
+  <button class="prev-btn" (click)="pageChange(-1)" [disabled]="currentPage <= 1">Previous</button>
+  <span class="page-info">
+    Page <span class="current-page">{{currentPage}}</span>
+  </span>
+  <button class="next-btn" (click)="pageChange(1)" [disabled]="currentPage === lastPage">Next</button>
+</div>

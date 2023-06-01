@@ -1,0 +1,34 @@
+.t-grid {
+  &_pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+    padding: 10px 0;
+    border-top: 1px dashed #cbcbcb;
+
+    .prev-btn,
+    .next-btn {
+      padding: 5px 10px;
+      background-color: #f2f2f2;
+      border: none;
+      cursor: pointer;
+
+      &:disabled {
+        cursor: default;
+      }
+    }
+
+    .page-info {
+      margin: 0 10px;
+    }
+
+    .current-page {
+      font-weight: bold;
+    }
+
+    .total-pages {
+      font-style: italic;
+    }
+  }
+}
