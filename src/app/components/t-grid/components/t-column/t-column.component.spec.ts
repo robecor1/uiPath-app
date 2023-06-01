@@ -10,7 +10,7 @@ describe('TColumn', () => {
     ]
   }));
 
-  it('should create the app', () => {
+  it('should create the column', () => {
     const fixture = TestBed.createComponent(TColumnComponent);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
@@ -83,7 +83,6 @@ describe('TColumn', () => {
     fixture.componentInstance.data = TEST_DATA
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    console.log(compiled.querySelector('.t-grid_item'))
     expect(compiled.querySelectorAll('.t-grid_item')?.length).toBe(3);
 
     for (const i of TEST_DATA.keys()) {
