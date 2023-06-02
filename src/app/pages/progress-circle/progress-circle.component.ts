@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {TProgressComponent} from "../../components/t-progress/t-progress.component";
+import { ActivatedRoute } from '@angular/router';
+import {Subscription} from "rxjs";
+import {LoaderType} from "../../components/t-progress/@type";
 
 @Component({
   selector: 'app-progress-circle',
@@ -16,11 +19,22 @@ import {TProgressComponent} from "../../components/t-progress/t-progress.compone
     }
   `]
 })
+
 export class ProgressCircleComponent implements OnInit {
   progress: number = 0
   intervalId: number
+  querySubscription: Subscription
+  loadType: LoaderType
+
+  constructor(private route: ActivatedRoute) {
+  }
 
   ngOnInit() {
+    this.querySubscription = this.route.queryParams.subscribe((params) => {
+      console.log(params);
+      this.loadType = params['type']
+    })
+
     this.intervalId = setInterval(() => {
       if (this.progress >= 100) {
         this.progress = 0
@@ -32,5 +46,9 @@ export class ProgressCircleComponent implements OnInit {
 
   ngOnDestroy() {
     clearInterval(this.intervalId)
+
+    if (this.querySubscription) {
+      this.querySubscription.unsubscribe()
+    }
   }
 }
