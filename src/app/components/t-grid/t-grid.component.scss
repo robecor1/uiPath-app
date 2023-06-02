@@ -8,22 +8,5 @@
     font-family: 'Roboto', sans-serif;
     max-height: 500px;
     overflow: auto;
-
-    .t-grid_column {
-      display: flex;
-      flex: 1;
-      flex-direction: column;
-    }
-
-    .t-grid_header {
-      font-weight: 500;
-      background-color: #92A8D1;
-      padding: 10px;
-    }
-
-    .t-grid_item {
-      background-color: #fff;
-      padding: 15px;
-    }
   }
 }
