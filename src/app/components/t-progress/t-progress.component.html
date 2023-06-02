@@ -15,7 +15,7 @@
   <div class="t-progress_mask"
        *ngIf="type === 'fill'">
     <div class="t-progress_fill"
-         [style.top.%]="100 - progress"
+         [style.top.%]="getFillTop()"
          [style.background-color]="color"
     ></div>
   </div>

@@ -38,9 +38,9 @@ export class ProgressCircleComponent implements OnInit {
       if (this.progress >= 100) {
         this.progress = 0
       } else {
-        this.progress += 10
+        this.progress += 1 + Math.floor(Math.random() * 10)
       }
-    }, 1000)
+    }, 500)
   }
 
   ngOnDestroy() {

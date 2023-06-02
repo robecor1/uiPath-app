@@ -37,7 +37,7 @@ $circle-fill-color: #51e2f5;
       width: 100%;
       height: 100%;
       border-radius: 100%;
-      transition: transform 1s ease 0s;
+      transition: transform 0.25s ease 0s;
       transform: rotate(0deg);
       clip-path: inset(0% 0% 0% 50%);
     }
@@ -56,7 +56,7 @@ $circle-fill-color: #51e2f5;
       width: 100%;
       height: 100%;
       border-radius: 100%;
-      transition: transform 1s ease 0s;
+      transition: transform 0.25s ease 0s;
       transform: rotate(0deg);
       clip-path: inset(0% 50% 0% 0%);
     }
