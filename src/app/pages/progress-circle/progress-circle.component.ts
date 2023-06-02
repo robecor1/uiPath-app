@@ -31,7 +31,6 @@ export class ProgressCircleComponent implements OnInit {
 
   ngOnInit() {
     this.querySubscription = this.route.queryParams.subscribe((params) => {
-      console.log(params);
       this.loadType = params['type']
     })
 
