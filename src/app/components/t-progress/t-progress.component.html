@@ -1,0 +1,22 @@
+<div class="t-progress_container" [style.width.px]="radius" [style.height.px]="radius">
+  <div *ngIf="type === 'clock'">
+    <div class="t-progress_left">
+      <div class="t-progress_fill" [style.background-color]="color"
+           [style.transform]="'rotate(' + (this.getLeftDegree()) + 'deg)'"
+      ></div>
+    </div>
+    <div class="t-progress_right">
+      <div class="t-progress_fill" [style.background-color]="color"
+           [style.transform]="'rotate(' + (this.getRightDegree()) + 'deg)'"
+      ></div>
+    </div>
+  </div>
+
+  <div class="t-progress_mask"
+       *ngIf="type === 'fill'">
+    <div class="t-progress_fill"
+         [style.top.%]="getFillTop()"
+         [style.background-color]="color"
+    ></div>
+  </div>
+</div>

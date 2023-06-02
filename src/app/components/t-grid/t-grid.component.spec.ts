@@ -149,7 +149,6 @@ describe('TGrid', () => {
     const sub = wrapperComponent.tGridComponent.sortChange.subscribe(({columnName, direction}) => {
       currentColumnName = columnName
       currentDirection = direction as string
-      console.log(direction)
     })
 
     const columnHeaderElement = wrapperFixture.debugElement.query(By.css('.t-grid_header'));
